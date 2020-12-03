@@ -10,4 +10,4 @@ We explored flexibility in the critical nutrient storage period preceding overwi
 
 
 ### Analysis
-_see  for codes and  and we can find the input in the folder [Data](https://github.com/claudinpcosta/2020-Queen-nutrient-storage-timing-experiment/tree/master/Data)._
+_see ...... for codes and  and we can find the input in the folder [Data](https://github.com/claudinpcosta/2020-Queen-nutrient-storage-timing-experiment/tree/master/Data)._
