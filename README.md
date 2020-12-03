@@ -1,10 +1,10 @@
 # 2020-Queen-nutrient-storage-timing-experiment
 
-## Contains all analyses performed on datasets for brood care manipulation in bumble bee queens [Costa et al. in prep]
+## Contains all analyses performed on datasets for nutrient storage timing in bumble bee queens [Watrous et al. in prep]
 
 ### Synopsis
 
-We performed an experiment to determine how maternal and sibling brood care differentially impact the developmental fate of workers in the bumble bee *Bombus impatiens*, using the maternal manipulation hypothesis as a guiding framework.
+We explored flexibility in the critical nutrient storage period preceding overwintering in *Bombus impatiens* queens. Specifically, we tested the ability of adult bumble bee queens to recover from diets that are temporarily deficient in either pollen or artificial nectar (for three, six, or nine days) during the early-life, pre-diapause nutrient sequestration period.
 
 ### Sample Information
 
