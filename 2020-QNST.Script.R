@@ -110,10 +110,17 @@ SurvSP3<- SurvSummProp3[-c(26:45),] #no PS bees - just by excluding rows.
 #reorder Treatment to have NS12d last
 SurvSP3$Treatment <- factor(SurvSP3$Treatment,levels = c("CTL","NS3d","NS6d","NS9d","NS12d"))
 #figure for survival curve
-ggplot(SurvSP3, aes(x=Days,y=PropAlive, group=Treatment, color=Treatment))+ geom_step(size=1) + xlab("Days") + ylab("Proportion of queens survived") +
+sur <- ggplot(SurvSP3, aes(x=Days,y=PropAlive, group=Treatment, color=Treatment))+ geom_step(size=1) + xlab("Days") + ylab("Proportion of queens survived") +
   theme_classic()+scale_x_continuous(breaks = c(0,3,6,9,12))+scale_color_manual(values = BluesPalette, breaks = c("CTL","NS3d","NS6d","NS9d","NS12d"), labels=c("Control","NS3d","NS6d","NS9d","NS12d"))+
   theme(text = element_text(family = "Arial", size = 12))
+sur
 
+#figure 3A and 3B to export 
+fig1 <- ggarrange(
+  sur,ncol = 1, nrow =  1,
+  widths = c(4, 4)
+)
+fig1
 
 ####Incremental Weight change####
 WtIncrem2 <- read.csv("WtIncQNSTnew.csv")
@@ -145,6 +152,12 @@ WtIncRedxN = filter(WtIncRedx, !(Treatment %in% c("PS12d", "PS3d", "PS6d", "PS9d
 WtIncRedxP = filter(WtIncRedx, !(Treatment %in% c("NS12d", "NS3d", "NS6d", "NS9d"))) #pollen and control samples
 
 #redo analysis with reduced data for Nectar
+WtIncRedxN<-WtIncRedxN %>% 
+  filter(Treatment != "NS9d") #removed 1 outlier, NS9d has few ind. 
+head(WtIncRedxN)
+dim(WtIncRedxN) 
+
+
 lm.nullN <- lmer(weight ~ 1 + (1|SampleID) + (1|Colony), data = WtIncRedxN, REML=FALSE)
 lm.nullN0 <- lmer(weight ~ 1 + (1|Colony), data = WtIncRedxN, REML=FALSE)
 lm.nullN1 <- lmer(weight ~ 1 + (1|Colony), data = WtIncRedxN, REML=FALSE)
