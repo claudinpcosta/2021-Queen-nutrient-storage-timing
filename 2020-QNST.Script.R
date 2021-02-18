@@ -160,7 +160,7 @@ dim(WtIncRedxN)
 
 lm.nullN <- lmer(weight ~ 1 + (1|SampleID) + (1|Colony), data = WtIncRedxN, REML=FALSE)
 lm.nullN0 <- lmer(weight ~ 1 + (1|Colony), data = WtIncRedxN, REML=FALSE)
-lm.nullN1 <- lmer(weight ~ 1 + (1|Colony), data = WtIncRedxN, REML=FALSE)
+lm.nullN1 <- lmer(weight ~ 1 + (1|SampleID), data = WtIncRedxN, REML=FALSE)
 lm.wtIN1 <- lmer(weight ~ Treatment + (1|SampleID) + (1|Colony), data = WtIncRedxN, REML=FALSE)
 lm.wtIN2 <- lmer(weight ~ timepoint + (1|SampleID) + (1|Colony), data=WtIncRedxN, REML=FALSE)
 lm.wtIN3 <- lmer(weight ~ WingAvgmm + (1|SampleID) + (1|Colony), data=WtIncRedxN, REML=FALSE)
@@ -181,7 +181,7 @@ summary(glht(lm.wtIN6, linfct=mcp(timepoint="Tukey")))
 #redo analysis with reduced data for Pollen
 lm.nullP <- lmer(weight ~ 1 + (1|SampleID) + (1|Colony), data = WtIncRedxP, REML=FALSE)
 lm.nullP0 <- lmer(weight ~ 1 + (1|Colony), data = WtIncRedxP, REML=FALSE)
-lm.nullP1 <- lmer(weight ~ 1 + (1|Colony), data = WtIncRedxP, REML=FALSE)
+lm.nullP1 <- lmer(weight ~ 1 + (1|SampleID), data = WtIncRedxP, REML=FALSE)
 lm.wtIP1 <- lmer(weight ~ Treatment + (1|SampleID) + (1|Colony), data = WtIncRedxP, REML=FALSE)
 lm.wtIP2 <- lmer(weight ~ timepoint + (1|SampleID) + (1|Colony), data=WtIncRedxP, REML=FALSE)
 lm.wtIP3 <- lmer(weight ~ WingAvgmm + (1|SampleID) + (1|Colony), data=WtIncRedxP, REML=FALSE)
@@ -334,7 +334,7 @@ scores(x, type="chisq")  #chi-sq scores => (x - mean(x))^2/var(x)
 scores(Lipid$Conc, type="t", prob=0.95)
 Lipid$Outliers<-scores(Lipid$Conc, type="z", prob=0.95) #these give which samples are above the 95% CI
 #this removes the TRUE outliers from this dataset
-LipRedX<-Glyc %>%
+LipRedX<-Lipid %>%
   filter(Outliers == "FALSE")
 head(LipRedX) 
 dim(LipRedX) #not removed
@@ -381,7 +381,7 @@ anova(l1,lnull)
 LipRedX$Treatment <- factor(LipRedX$Treatment,levels = c("CTL","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"), labels = c("Control","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"))
 LipFig<-ggplot(LipRedX, aes(Treatment, Conc)) + geom_boxplot(aes(fill=Treatment)) + theme_bw() + ylab("Lipid concentration (mg/mL)") + 
   theme(legend.position = "none",text = element_text(family = "Arial", size = 12)) + scale_fill_manual(values = BlOrReducedPal) +
-  geom_bracket(xmin = "PS3d", xmax = c("PS9d"), y.position = c(0.020), label = c("*"), label.size = 5)
+  geom_bracket(xmin = "PS3d", xmax = c("PS9d"), y.position = c(0.025), label = c("*"), label.size = 5)
 LipFig
 
 
