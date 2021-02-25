@@ -18,6 +18,7 @@ require(readr)
 library(tidyr)
 library(lme4)
 library(lmerTest)
+library(lmtest)
 require(outliers)
 
 
@@ -175,6 +176,7 @@ lm.wtIN11 <- lmer(weight ~ Treatment + timepoint * WingAvgmm + (1|SampleID) + (1
 model.sel(lm.nullN,lm.nullN1, lm.nullN0, lm.wtIN1, lm.wtIN2, lm.wtIN3, lm.wtIN5,lm.wtIN6, lm.wtIN7,lm.wtIN8, lm.wtIN9, lm.wtIN10, lm.wtIN11)
 summary(lm.wtIN6) #best fit model
 Anova(lm.wtIN6)
+lrtest(lm.wtIN6,lm.nullN)
 summary(glht(lm.wtIN6, linfct=mcp(Treatment="Tukey")))
 summary(glht(lm.wtIN6, linfct=mcp(timepoint="Tukey")))
 
@@ -196,6 +198,7 @@ lm.wtIP11 <- lmer(weight ~ Treatment + timepoint * WingAvgmm + (1|SampleID) + (1
 model.sel(lm.nullP,lm.nullP1, lm.nullP0, lm.wtIP1, lm.wtIP2, lm.wtIP3, lm.wtIP5,lm.wtIP6, lm.wtIP7,lm.wtIN8, lm.wtIP9, lm.wtIP10, lm.wtIP11)
 summary(lm.wtIP6) #best fit model
 Anova(lm.wtIP6)
+lrtest(lm.wtIP6,lm.nullP)
 summary(glht(lm.wtIP6, linfct=mcp(Treatment="Tukey")))
 summary(glht(lm.wtIP6, linfct=mcp(timepoint="Tukey")))
 
@@ -375,6 +378,7 @@ model.sel(lnull, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12, l13)
 summary(l1)
 summary(glht(l1, linfct = mcp(Treatment = "Tukey")))
 anova(l1,lnull)
+lrtest(l1,lnull)
 
 
 ####FIGURE - Lipids####
@@ -454,8 +458,8 @@ g13 <- lmer(Log.Con ~ Treatment * AbdDryWt + WingAvgmm + (1|Colony),data=GlycRed
 model.sel(gnull, g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12, g13)
 summary(g3)
 anova(g3,gnull)
-summary(g1)
 summary(glht(g1, linfct = mcp(Treatment = "Tukey")), test = adjusted("holm"))
+lrtest(g3,gnull)
 
 
 ####FIGURE - Glycogen####
