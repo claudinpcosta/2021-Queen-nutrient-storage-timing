@@ -23,7 +23,10 @@ require(outliers)
 
 
 #####Color palette for QNST figures#####
+#Making a palette with black for CTL, then 4 for NS:
 BluesPalette <- c("#252525","#a8ddb5","#d8b365","#3182BD","#bcbddc")
+#Making a palette with black for CTL, then 2 for NS:
+BluesPalette1 <- c("#252525","#a8ddb5","#d8b365")
 #Making a palette with black for CTL, then 4 for NS, 4 for PSL:
 BluOranPalette <- c("#252525","#a8ddb5","#d8b365","#3182BD","#08519C","##dd1c77","#a6bddb","#E6550D","#A63603")
 #Making a palette with black for CTL, 3  for NS, 4 for PS:
@@ -113,10 +116,10 @@ SurvSP3$Treatment <- factor(SurvSP3$Treatment,levels = c("CTL","NS3d","NS6d","NS
 #figure for survival curve
 sur <- ggplot(SurvSP3, aes(x=Days,y=PropAlive, group=Treatment, color=Treatment))+ geom_step(size=1) + xlab("Days") + ylab("Proportion of queens survived") +
   theme_classic()+scale_x_continuous(breaks = c(0,3,6,9,12))+scale_color_manual(values = BluesPalette, breaks = c("CTL","NS3d","NS6d","NS9d","NS12d"), labels=c("Control","NS3d","NS6d","NS9d","NS12d"))+
-  theme(text = element_text(family = "Arial", size = 12))
+  theme(legend.text=element_text(size=10), legend.title=element_text(size=10))
 sur
 
-#figure 3A and 3B to export 
+    #figure 1 to export####
 fig1 <- ggarrange(
   sur,ncol = 1, nrow =  1,
   widths = c(4, 4)
@@ -203,6 +206,64 @@ summary(glht(lm.wtIP6, linfct=mcp(Treatment="Tukey")))
 summary(glht(lm.wtIP6, linfct=mcp(timepoint="Tukey")))
 
 
+####Tukey Honest Significant Difference (HSD)####
+
+###Nectar-starved
+
+#zero day
+N0d<-WtIncRedxN %>% 
+  filter(timepoint == "0") #only data from 0 day  
+pairwise.t.test(N0d$weight, N0d$Treatment, p.adjust.method = "none")
+
+#three day
+N3d<-WtIncRedxN %>% 
+  filter(timepoint == "3") #only data from 3 day  
+pairwise.t.test(N3d$weight, N3d$Treatment, p.adjust.method = "none")
+
+#six day
+N6d<-WtIncRedxN %>% 
+  filter(timepoint == "6") #only data from 6 day  
+pairwise.t.test(N6d$weight, N6d$Treatment, p.adjust.method = "none")
+
+#nine day
+N9d<-WtIncRedxN %>% 
+  filter(timepoint == "9") #only data from 9 day  
+pairwise.t.test(N9d$weight, N9d$Treatment, p.adjust.method = "none")
+
+#twelve day
+N12d<-WtIncRedxN %>% 
+  filter(timepoint == "12") #only data from 12 day  
+pairwise.t.test(N12d$weight, N12d$Treatment, p.adjust.method = "none")
+
+
+###Pollen-starved
+
+#zero day
+P0d<-WtIncRedxP %>% 
+  filter(timepoint == "0") #only data from 0 day  
+pairwise.t.test(P0d$weight, P0d$Treatment, p.adjust.method = "none")
+
+#three day
+P3d<-WtIncRedxP %>% 
+  filter(timepoint == "3") #only data from 3 day  
+pairwise.t.test(P3d$weight, P3d$Treatment, p.adjust.method = "none")
+
+#six day
+P6d<-WtIncRedxP %>% 
+  filter(timepoint == "6") #only data from 6 day  
+pairwise.t.test(P6d$weight, P6d$Treatment, p.adjust.method = "none")
+
+#nine day
+P9d<-WtIncRedxP %>% 
+  filter(timepoint == "9") #only data from 9 day  
+pairwise.t.test(P9d$weight, P9d$Treatment, p.adjust.method = "none")
+
+#twelve day
+P12d<-WtIncRedxP %>% 
+  filter(timepoint == "12") #only data from 12 day  
+pairwise.t.test(P12d$weight, P12d$Treatment, p.adjust.method = "none")
+
+
 ####FIGURE - Weight change####
 
 #Weight change
@@ -274,13 +335,31 @@ WtIncNS
 WtIncNS$mean<-as.numeric(WtIncNS$beeweight_mean)
 WtIncNS$SE<-as.numeric(WtIncNS$beeweight_se2)
 WtIncNS$Treatment <- factor(WtIncNS$Treatment,levels = c("control","NS3d","NS6d","NS9d","NS12d"), labels = c("Control","NS3d","NS6d","NS9d","NS12d"))
+pd <- position_dodge(1)
 FigNS<-ggplot(WtIncNS, aes(x=Timepoint, y=WtIncNS$mean, color=Treatment, group=Treatment)) + 
-  geom_line(size=0.5) + geom_point(aes(shape=Treatment),fill = "white", size=2)+ 
-  scale_x_continuous(breaks = c(0,3,6,9,12)) +geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2) +
-  theme_bw() + ylab("Mean ± s.e.m. bee weight (g)") + xlab("Days") + scale_color_manual(values = BluesPalette)+
-  scale_shape_manual(values = c(16,17,15,8,7))+theme(text = element_text(size = 14))+
-  scale_y_continuous(limits = c(0.35,0.65))
+  geom_line(size=0.5, position = pd) + geom_point(aes(shape=Treatment),fill = "white", size=2, position = pd)+ 
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2, position = pd) +
+  theme_bw() + ylab("Mean ± s.e.m. bee weight (g)") + xlab("Days") +scale_color_manual(values = BluesPalette) +
+  scale_shape_manual(values = c(16,17,15,8,7))+
+  scale_x_continuous(breaks = c(seq(from = 0, to = 12, by = 3))) +
+  scale_y_continuous(limits = c(0.35,0.65)) +
+  theme(legend.text=element_text(size=10), legend.title=element_text(size=10))
 FigNS
+
+#subsetting for CTL+NS figure suppl.
+WtIncNS2<-WtIncNS %>% 
+  filter(Treatment != "NS9d", Treatment != "NS12d") 
+WtIncNS2$Timepoint <- factor(WtIncNS2$Timepoint, levels = c("0","3","6","9","12"), labels = c("O day","3 day","6 day","9 day","12 day"))
+FigNS.sp <- ggplot(WtIncNS2, aes(x = Timepoint, y = mean, fill = Treatment, color=Treatment, group=Treatment)) +   
+  geom_bar(stat = "identity",
+           position = position_dodge(0.9)) +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), 
+                position = position_dodge(0.9),
+                width = 0.1) +
+  theme_bw() + ylab("Mean ± s.e.m. bee weight (g)") + xlab("Days") +
+  scale_color_manual(values = BluesPalette1) + scale_fill_manual(values = BluesPalette1) +
+  theme(legend.text=element_text(size=10), legend.title=element_text(size=10))
+FigNS.sp
 
 #subsetting for CTL+PS figure
 WtIncPS = filter(WtIncNew4, Treatment %in% c("control","PS3d","PS6d","PS9d","PS12d"))
@@ -288,16 +367,29 @@ WtIncPS
 WtIncPS$Mean<-as.numeric(WtIncPS$beeweight_mean)
 WtIncPS$SE<-as.numeric(WtIncPS$beeweight_se2)
 WtIncPS$Treatment <- factor(WtIncPS$Treatment,levels = c("control","PS3d","PS6d","PS9d","PS12d"), labels = c("Control","PS3d","PS6d","PS9d","PS12d"))
+pd <- position_dodge(1)
 FigPS<-ggplot(WtIncPS, aes(x=Timepoint, y=Mean, color=Treatment, group=Treatment)) + 
-  geom_line(size=0.5) + geom_point(aes(shape=Treatment),fill = "white", size=3)+ 
-  scale_x_continuous(breaks = c(0,3,6,9,12))+geom_errorbar(aes(ymin=Mean-SE, ymax=Mean+SE), width=.2) +
+  geom_line(size=0.5, position = pd) + geom_point(aes(shape=Treatment),fill = "white", size=2, position = pd)+ 
+  geom_errorbar(aes(ymin=Mean-SE, ymax=Mean+SE), width=.2, position = pd) +
   theme_bw() + ylab("Mean ± s.e.m. bee weight (g)") + xlab("Days") +scale_color_manual(values = OranPalette) +
-  scale_shape_manual(values = c(16,17,15,8,7))+theme(text = element_text(size = 14))+
-  scale_y_continuous(limits = c(0.35,0.65))
+  scale_shape_manual(values = c(16,17,15,8,7))+
+  scale_x_continuous(breaks = c(seq(from = 0, to = 12, by = 3))) +
+  scale_y_continuous(limits = c(0.35,0.65)) +
+  theme(legend.text=element_text(size=10), legend.title=element_text(size=10))
 FigPS
 
+#subsetting for CTL+PS figure suppl.
+WtIncPS1<-WtIncPS
+WtIncPS1$Timepoint <- factor(WtIncPS1$Timepoint, levels = c("0","3","6","9","12"), labels = c("O day","3 day","6 day","9 day","12 day"))
+FigPS.sp <- ggplot(WtIncPS1, aes(x = Timepoint, y = Mean, fill = Treatment, color=Treatment, group=Treatment)) +   
+  geom_bar(stat = "identity",
+           position = position_dodge(0.9)) +
+  geom_errorbar(aes(ymin=Mean-SE, ymax=Mean+SE), width=.2, position = position_dodge(0.9)) +
+  theme_bw() + ylab("Mean ± s.e.m. bee weight (g)") + xlab("Days") +
+  scale_color_manual(values = OranPalette) + scale_fill_manual(values = OranPalette) +
+FigPS.sp
 
-#figure 2A and 2B to export 
+    #figure 2 to export#### 
 fig2 <- ggarrange(
   FigNS, FigPS, ncol = 1, nrow =  2,
   labels = c("A", "B"),
@@ -305,6 +397,17 @@ fig2 <- ggarrange(
   widths = c(3, 3)
 )
 fig2
+
+
+    #figure sp. to export#### 
+fig.sp <- ggarrange(
+  FigNS.sp, FigPS.sp, ncol = 1, nrow =  2,
+  labels = c("A", "B"),
+  common.legend = FALSE, legend = "right",
+  widths = c(3, 3)
+)
+fig.sp
+
 
 #####Lipids Assasy#####
 Lipid <- read.csv("QNSTLipidsConcCalc.csv")
@@ -384,7 +487,7 @@ lrtest(l1,lnull)
 ####FIGURE - Lipids####
 LipRedX$Treatment <- factor(LipRedX$Treatment,levels = c("CTL","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"), labels = c("Control","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"))
 LipFig<-ggplot(LipRedX, aes(Treatment, Conc)) + geom_boxplot(aes(fill=Treatment)) + theme_bw() + ylab("Lipid concentration (mg/mL)") + 
-  theme(legend.position = "none",text = element_text(family = "Arial", size = 12)) + scale_fill_manual(values = BlOrReducedPal) +
+  theme(legend.position = "none",text = element_text(family = "Arial", size = 10), legend.title=element_text(size=10)) + scale_fill_manual(values = BlOrReducedPal) +
   geom_bracket(xmin = "PS3d", xmax = c("PS9d"), y.position = c(0.025), label = c("*"), label.size = 5)
 LipFig
 
@@ -465,11 +568,11 @@ lrtest(g3,gnull)
 ####FIGURE - Glycogen####
 GlycRedX$Treatment <- factor(GlycRedX$Treatment,levels = c("CTL","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"), labels = c("Control","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"))
 GlycFig<-ggplot(GlycRedX, aes(Treatment, Conc)) + geom_boxplot(aes(fill=Treatment)) + theme_bw() + ylab("Glycogen concentration (mg/mL)") + 
-  theme(legend.position = "none",text = element_text(family = "Arial", size = 12)) + scale_fill_manual(values = BlOrReducedPal)
+  theme(legend.position = "none",text = element_text(size = 10), legend.text=element_text(size=10), legend.title=element_text(size=10)) + scale_fill_manual(values = BlOrReducedPal)
 GlycFig
 
 
-#figure 3A and 3B to export 
+    #figure 3 to export####
 fig3 <- ggarrange(
   LipFig, GlycFig, ncol = 1, nrow =  2,
   labels = c("A", "B"),
