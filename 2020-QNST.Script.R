@@ -332,11 +332,13 @@ WtIncNew4
 #subsetting for CTL+NS figure
 WtIncNS = filter(WtIncNew4, Treatment %in% c("control","NS3d","NS6d","NS9d","NS12d"))
 WtIncNS
-WtIncNS$mean<-as.numeric(WtIncNS$beeweight_mean)
-WtIncNS$SE<-as.numeric(WtIncNS$beeweight_se2)
-WtIncNS$Treatment <- factor(WtIncNS$Treatment,levels = c("control","NS3d","NS6d","NS9d","NS12d"), labels = c("Control","NS3d","NS6d","NS9d","NS12d"))
+WtIncNS1<-WtIncNS %>% 
+  filter(Treatment != "NS9d", Treatment != "NS12d") 
+WtIncNS1$mean<-as.numeric(WtIncNS1$beeweight_mean)
+WtIncNS1$SE<-as.numeric(WtIncNS1$beeweight_se2)
+WtIncNS1$Treatment <- factor(WtIncNS1$Treatment,levels = c("control","NS3d","NS6d"), labels = c("Control","NS3d","NS6d"))
 pd <- position_dodge(1)
-FigNS<-ggplot(WtIncNS, aes(x=Timepoint, y=WtIncNS$mean, color=Treatment, group=Treatment)) + 
+FigNS<-ggplot(WtIncNS1, aes(x=Timepoint, y=WtIncNS1$mean, color=Treatment, group=Treatment)) + 
   geom_line(size=0.5, position = pd) + geom_point(aes(shape=Treatment),fill = "white", size=2, position = pd)+ 
   geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2, position = pd) +
   theme_bw() + ylab("Mean ± s.e.m. bee weight (g)") + xlab("Days") +scale_color_manual(values = BluesPalette) +
@@ -488,7 +490,7 @@ lrtest(l1,lnull)
 LipRedX$Treatment <- factor(LipRedX$Treatment,levels = c("CTL","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"), labels = c("Control","NS3d","NS6d","PS3d","PS6d","PS9d","PS12d"))
 LipFig<-ggplot(LipRedX, aes(Treatment, Conc)) + geom_boxplot(aes(fill=Treatment)) + theme_bw() + ylab("Lipid concentration (mg/mL)") + 
   theme(legend.position = "none",text = element_text(family = "Arial", size = 10), legend.title=element_text(size=10)) + scale_fill_manual(values = BlOrReducedPal) +
-  geom_bracket(xmin = "PS3d", xmax = c("PS9d"), y.position = c(0.025), label = c("*"), label.size = 5)
+  geom_bracket(xmin = "PS3d", xmax = c("PS9d"), y.position = c(0.025), label = c("*"), label.size = 3)
 LipFig
 
 
