@@ -1,6 +1,6 @@
 # 2021-Queen-nutrient-storage-timing
 
-## Contains all analyses performed on datasets for nutrient storage timing in bumble bee queens [Watrous et al. in prep]
+## Contains all analyses performed on datasets for nutrient storage timing in bumble bee queens [Watrous et al. in prep](https://academic.oup.com/iob/article/3/1/obab009/6237493)
 
 ### Synopsis
 
